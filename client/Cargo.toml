@@ -1,0 +1,11 @@
+[package]
+name = "tenkcomm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+slint = "1.9.0"
+tokio = { version = "1", features = ["full"] }
+
+[build-dependencies]
+slint-build = "1.8.0"

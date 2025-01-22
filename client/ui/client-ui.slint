@@ -1,0 +1,65 @@
+import { Button, VerticalBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    in-out property <string> received-text: "No messages yet";
+    in-out property <string> input-text: "";
+    callback send-message(string);
+    
+    title: "Chat Room";
+    min-width: 400px;
+    min-height: 500px;
+
+    VerticalBox {
+        spacing: 16px;
+        padding: 16px;
+
+        // Message display area
+        Rectangle {
+            background: white;
+            border-width: 1px;
+            border-color: #ccc;
+            border-radius: 4px;
+            vertical-stretch: 1;
+
+            ChatHistory := TextInput {
+                text: root.received-text;
+                read-only: true;
+                wrap: word-wrap;
+                width: parent.width;
+                height: parent.height;
+                color: #333;
+            }
+        }
+
+        // Message input area
+        HorizontalLayout {
+            spacing: 8px;
+            height: 36px;
+
+            MessageInput := TextInput {
+                horizontal-stretch: 1;
+                text <=> root.input-text;
+                
+                accepted => {
+                    if (root.input-text != "") {
+                        root.received-text += "\nYou: " + root.input-text;
+                        root.send-message(root.input-text);
+                        root.input-text = "";
+                    }
+                }
+            }
+
+            Button {
+                text: "Send";
+                primary: true;
+                clicked => {
+                    if (root.input-text != "") {
+                        root.received-text += "\nYou: " + root.input-text;
+                        root.send-message(root.input-text);
+                        root.input-text = "";
+                    }
+                }
+            }
+        }
+    }
+}
