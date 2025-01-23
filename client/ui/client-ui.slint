@@ -35,16 +35,32 @@ export component AppWindow inherits Window {
         HorizontalLayout {
             spacing: 8px;
             height: 36px;
-
-            MessageInput := TextInput {
-                horizontal-stretch: 1;
-                text <=> root.input-text;
-                
-                accepted => {
-                    if (root.input-text != "") {
-                        root.received-text += "\nYou: " + root.input-text;
-                        root.send-message(root.input-text);
-                        root.input-text = "";
+            Rectangle {
+                background: white;
+                border-width: 1px;
+                border-radius: 4px;
+                border-color: #ccc;
+                states [
+                    hover: {
+                        background: #999;
+                    }
+                    focused: {
+                        border-color: #0d84e6;
+                    }
+                ]
+                MessageInput := TextInput {
+                    horizontal-stretch: 1;
+                    text <=> root.input-text;
+                    selection-background-color: #bfdffa;
+                    wrap: word-wrap;
+                    color: #0d84e6;
+                    vertical-alignment: center;
+                    accepted => {
+                        if (root.input-text != "") {
+                            root.received-text += "\nYou: " + root.input-text;
+                            root.send-message(root.input-text);
+                            root.input-text = "";
+                        }
                     }
                 }
             }
