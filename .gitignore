@@ -1,0 +1,18 @@
+# Rust build artifacts
+/target/
+/client/target/
+/server/target/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Debug files
+**/*.rs.bk
+*.pdb
+
+# OS-specific files
+.DS_Store
+.env
