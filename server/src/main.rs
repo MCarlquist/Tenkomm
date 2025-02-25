@@ -24,16 +24,16 @@ async fn main() -> Result<(), Box<dyn Error>> {
     loop {
         // Accept new connections
         let (socket, addr) = listener.accept().await?;
-        println!("New client connected: {}", addr);
+        println!("New client connected");
 
         // Clone the sender for this connection
         let tx = tx.clone();
         // Create a new receiver for this connection
-        let mut rx = tx.subscribe();
+        let rx = tx.subscribe();
 
         // Spawn a new task to handle this client
         tokio::spawn(async move {
-            let mut socket = socket;
+            let socket = socket;
             handle_connection(socket, addr, tx, rx).await;
         });
     }
@@ -61,7 +61,6 @@ async fn handle_connection(
                     }
                     Ok(n) => {
                         let message = String::from_utf8_lossy(&buffer[..n]).to_string();
-                        println!("Received message from {}: {}", addr, message);
                         
                         // Create and broadcast the message
                         let msg = Message {
@@ -88,10 +87,9 @@ async fn handle_connection(
                     Ok(msg) => {
                         // Only forward messages to other clients (not back to sender)
                         if msg.from != addr {
-                            println!("Forwarding message to {}: {}", addr, msg.content);
                             // Send the message content with a newline to ensure proper display
                             let message = format!("{}\n", msg.content);
-                            println!("Sending message: {}", message);
+                            
                             if let Err(e) = writer.write_all(message.as_bytes()).await {
                                 eprintln!("Failed to write to socket: {}", e);
                                 break;
