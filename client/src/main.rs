@@ -9,6 +9,20 @@ slint::slint! {
     import { AppWindow } from "ui/client-ui.slint";
 }
 
+struct Cursor {
+    x: usize,
+}
+
+impl Cursor {
+    fn new() -> Self {
+        Self { x: 0 }
+    }
+
+    fn move_right(&mut self) {
+        self.x += 1;
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let app_ui = AppWindow::new().expect("Failed to create UI");
@@ -44,6 +58,9 @@ async fn main() {
             
             let writer = Arc::clone(&writer);
             tokio::spawn(async move {
+                let mut cursor = Cursor::new();
+                cursor.move_right();
+                
                 let message = format!("{}\n", message);
                 if let Err(e) = writer.lock().await.write_all(message.as_bytes()).await {
                     eprintln!("Failed to send message: {}", e);

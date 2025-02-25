@@ -20,6 +20,7 @@ export component AppWindow inherits Window {
             border-color: #ccc;
             border-radius: 4px;
             vertical-stretch: 1;
+            padding: 4px;
 
             ChatHistory := TextInput {
                 text: root.received-text;
@@ -48,19 +49,24 @@ export component AppWindow inherits Window {
                         border-color: #0d84e6;
                     }
                 ]
-                MessageInput := TextInput {
-                    horizontal-stretch: 1;
-                    text <=> root.input-text;
-                    selection-background-color: #bfdffa;
-                    wrap: word-wrap;
-                    color: #0d84e6;
-                    vertical-alignment: center;
-                    accepted => {
-                        if (root.input-text != "") {
-                            root.received-text += "\nYou: " + root.input-text;
-                            root.send-message(root.input-text);
-                            root.input-text = "";
-                        }
+                GridLayout {
+                    Rectangle {
+                        MessageInput := TextInput {
+                            horizontal-stretch: 1;
+                            text <=> root.input-text;
+                            selection-background-color: #bfdffa;
+                            wrap: word-wrap;
+                            color: #075e20;
+                            vertical-alignment: center;
+                            text-cursor-width: 2px;
+                            accepted => {
+                                if (root.input-text != "") {
+                                    root.received-text += "\nYou: " + root.input-text;
+                                    root.send-message(root.input-text);
+                                    root.input-text = "";
+                                }
+                            }
+                        }   
                     }
                 }
             }
