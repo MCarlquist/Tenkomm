@@ -38,7 +38,6 @@ async fn main() {
         let writer = Arc::clone(&writer);
         weak.unwrap().on_send_message(move |message| {
             let message = message.trim().to_string();
-            println!("Message to be sent to server: {}", message);
             if message.is_empty() {
                 return;
             }
@@ -69,8 +68,7 @@ async fn main() {
                     }
                     Ok(n) => {
                         if let Ok(msg) = String::from_utf8(buf[..n].to_vec()) {
-                            let msg = msg.trim().to_string();
-                            println!("Received message from server: {}", msg);
+                            let msg = msg.trim().to_string();                            
                             if !msg.is_empty() {
                                 if let Err(e) = tx.send(msg).await {
                                     eprintln!("Failed to send message to UI: {}", e);
@@ -93,12 +91,10 @@ async fn main() {
     tokio::spawn(async move {
         while let Some(msg) = rx.recv().await {
             let msg = msg.clone();
-            println!("Updating UI with message: {}", msg);
             let weak = weak.clone();
             if let Err(e) = slint::invoke_from_event_loop(move || {
                 if let Some(ui) = weak.upgrade() {
                     let current_text = ui.get_received_text();
-                    println!("Current text in UI: {}", current_text);
                     ui.set_received_text(format!("{}\nOther: {}", current_text, msg).into());
                 }
             }) {
