@@ -1,0 +1,9 @@
+[package]
+name = "chatserver"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+shuttle-runtime = "0.52.0"
+tokio = "1"
